@@ -1,6 +1,5 @@
 package core.midi.sheet.music;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.DisplayMode;
 import java.awt.Graphics;
@@ -655,7 +654,8 @@ public class Piano extends JPanel
    {
       JDialog dialog = new JDialog();
       Piano piano = new Piano();
-      dialog.setSize((int)(piano.getWidth()*1.05), piano.getHeight()*2);
+      dialog.add(piano);
+      dialog.setSize((int) (piano.getWidth() * 1.05), piano.getHeight() * 2);
       dialog.setVisible(true);
    }
 }
