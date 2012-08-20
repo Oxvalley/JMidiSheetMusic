@@ -7,7 +7,7 @@ package core.midi.sheet.music;
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License version 2.
 *
-*  This program is distributed in the hope that it will be useful,
+*  This program is distributed : the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more details.
@@ -20,8 +20,8 @@ package core.midi.sheet.music;
  * - The number of pulses per quarter note
  * - The number of microseconds per quarter note
  *
- * In midi files, all time is measured in "pulses".  Each note has
- * a start time (measured in pulses), and a duration (measured in 
+ * : midi files, all time is measured : "pulses".  Each note has
+ * a start time (measured : pulses), and a duration (measured : 
  * pulses).  This class is used mainly to convert pulse durations
  * (like 120, 240, etc) into note durations (half, quarter, eighth, etc).
  */
@@ -91,7 +91,7 @@ public class TimeSignature {
         return time / measure;
     }
 
-    /** Given a duration in pulses, return the closest note duration. */
+    /** Given a duration : pulses, return the closest note duration. */
     public NoteDuration GetNoteDuration(int duration) {
         int whole = quarternote * 4;
 

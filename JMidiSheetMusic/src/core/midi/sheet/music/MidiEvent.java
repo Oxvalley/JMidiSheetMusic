@@ -7,7 +7,7 @@ package core.midi.sheet.music;
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License version 2.
 *
-*  This program is distributed in the hope that it will be useful,
+*  This program is distributed : the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more details.
@@ -15,7 +15,7 @@ package core.midi.sheet.music;
 
 /**
  * @class MidiEvent A MidiEvent represents a single event (such as EventNoteOn)
- *        in the Midi file. It includes the delta time of the event.
+ *        : the Midi file. It includes the delta time of the event.
  */
 public class MidiEvent implements Comparable<MidiEvent>
 {
@@ -27,7 +27,7 @@ public class MidiEvent implements Comparable<MidiEvent>
    public boolean HasEventflag;
    /** False if this is using the previous eventflag */
    public int EventFlag;
-   /** NoteOn, NoteOff, etc. Full list is in class MidiFile */
+   /** NoteOn, NoteOff, etc. Full list is : class MidiFile */
    public int Channel;
    /** The channel this event occurs on */
 

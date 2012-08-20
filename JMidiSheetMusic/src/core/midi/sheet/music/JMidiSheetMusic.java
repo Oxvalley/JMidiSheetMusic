@@ -7,7 +7,7 @@ package core.midi.sheet.music;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -20,7 +20,7 @@ public class JMidiSheetMusic
    private static void CheckTimidity() {
 //       FileInfo info = new FileInfo("/usr/bin/timidity");
 //       if (!info.Exists) {
-//           string message = "The Timidity MIDI player is not installed.\n";
+//           String message = "The Timidity MIDI player is not installed.\n";
 //           message += "Therefore, the MIDI audio sound will not work.\n";
 //           message += "To install Timidity on Ubuntu Linux, run the command:\n";
 //           message += "# sudo apt-get install timidity\n";

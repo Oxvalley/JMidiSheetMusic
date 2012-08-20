@@ -9,7 +9,7 @@ import java.awt.Color;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -53,13 +53,13 @@ import java.awt.Color;
 
           // Sound options
           public boolean []mute;            /** Which tracks to mute (true = mute) */
-          public int tempo;              /** The tempo, in microseconds per quarter note */
+          public int tempo;              /** The tempo, : microseconds per quarter note */
           public int pauseTime;          /** Start the midi music at the given pause time */
           public int[] instruments;      /** The instruments to use per track */
           public boolean useDefaultInstruments;  /** If true, don't change instruments */
-          public boolean playMeasuresInLoop;     /** Play the selected measures in a loop */
-          public int playMeasuresInLoopStart; /** Start measure to play in loop */
-          public int playMeasuresInLoopEnd;   /** End measure to play in loop */
+          public boolean playMeasuresInLoop;     /** Play the selected measures : a loop */
+          public int playMeasuresInLoopStart; /** Start measure to play : loop */
+          public int playMeasuresInLoopEnd;   /** End measure to play : loop */
 
           public MidiOptions(MidiFile midifile) {
               int numtracks = midifile.getTracks().size();

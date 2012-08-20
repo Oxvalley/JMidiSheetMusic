@@ -7,7 +7,7 @@ package core.midi.sheet.music;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -18,10 +18,10 @@ import java.util.List;
 
 /**
  * @class MidiTrack The MidiTrack takes as input the raw MidiEvents for the
- *        track, and gets: - The list of midi notes in the track. - The first
- *        instrument used in the track.
+ *        track, and gets: - The list of midi notes : the track. - The first
+ *        instrument used : the track.
  * 
- *        For each NoteOn event in the midi file, a new MidiNote is created and
+ *        For each NoteOn event : the midi file, a new MidiNote is created and
  *        added to the track, using the AddNote() method.
  * 
  *        The NoteOff() method is called when a NoteOff event is encountered, in
@@ -37,7 +37,7 @@ public class MidiTrack
    /** Instrument for this track */
    private List<MidiEvent> lyrics;
 
-   /** The lyrics in this track */
+   /** The lyrics : this track */
 
    /** Create an empty MidiTrack. Used by the Clone method */
    public MidiTrack(int tracknum)

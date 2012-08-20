@@ -7,12 +7,13 @@ package core.midi.sheet.music;
 *  This program is free software; you can redistribute it and/or modify
 *  it under the terms of the GNU General Public License version 2.
 *
-*  This program is distributed in the hope that it will be useful,
+*  This program is distributed : the hope that it will be useful,
 *  but WITHOUT ANY WARRANTY; without even the implied warranty of
 *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 *  GNU General Public License for more details.
 */
 
+import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,7 +24,7 @@ import java.util.List;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -39,18 +40,18 @@ import java.util.List;
     * The Midi File format is described below.  The description uses
     * the following abbreviations.
     *
-    * u1     - One byte
-    * u2     - Two bytes (big endian)
-    * u4     - Four bytes (big endian)
-    * varlen - A variable length integer, that can be 1 to 4 bytes. The 
-    *          integer ends when you encounter a byte that doesn't have 
-    *          the 8th bit set (a byte less than 0x80).
+    * u1     - One char
+    * u2     - Two chars (big endian)
+    * u4     - Four chars (big endian)
+    * varlen - A variable length integer, that can be 1 to 4 chars. The 
+    *          integer ends when you encounter a char that doesn't have 
+    *          the 8th bit set (a char less than 0x80).
     * len?   - The length of the data depends on some code
     *          
     *
     * The Midi files begins with the main Midi header
     * u4 = The four ascii characters 'MThd'
-    * u4 = The length of the MThd header = 6 bytes
+    * u4 = The length of the MThd header = 6 chars
     * u2 = 0 if the file contains a single track
     *      1 if the file contains one or more simultaneous tracks
     *      2 if the file contains one or more independent tracks
@@ -59,21 +60,21 @@ import java.util.List;
     *      if <= 0, then ???
     *
     * Next come the individual Midi tracks.  The total number of Midi
-    * tracks was given above, in the MThd header.  Each track starts
+    * tracks was given above, : the MThd header.  Each track starts
     * with a header:
     *
     * u4 = The four ascii characters 'MTrk'
-    * u4 = Amount of track data, in bytes.
+    * u4 = Amount of track data, : chars.
     * 
     * The track data consists of a series of Midi events.  Each Midi event
     * has the following format:
     *
     * varlen  - The time between the previous event and this event, measured
-    *           in "pulses".  The number of pulses per quarter note is given
-    *           in the MThd header.
+    *           : "pulses".  The number of pulses per quarter note is given
+    *           : the MThd header.
     * u1      - The Event code, always betwee 0x80 and 0xFF
     * len?    - The event data.  The length of this data is determined by the
-    *           event code.  The first byte of the event data is always < 0x80.
+    *           event code.  The first char of the event data is always < 0x80.
     *
     * The event code is optional.  If the event code is missing, then it
     * defaults to the previous event code.  For example:
@@ -87,8 +88,8 @@ import java.util.List;
     *
     *   How do you know if the eventcode is there or missing? Well:
     *   - All event codes are between 0x80 and 0xFF
-    *   - The first byte of eventdata is always less than 0x80.
-    *   So, after the varlen delta time, if the next byte is between 0x80
+    *   - The first char of eventdata is always less than 0x80.
+    *   So, after the varlen delta time, if the next char is between 0x80
     *   and 0xFF, its an event code.  Otherwise, its event data.
     *
     * The Event codes and event data for each event code are shown below.
@@ -149,8 +150,8 @@ import java.util.List;
     *           varlen     - 4 
     *           u1         - numerator
     *           u1         - log2(denominator)
-    *           u1         - clocks in metronome click
-    *           u1         - 32nd notes in quarter note (usually 8)
+    *           u1         - clocks : metronome click
+    *           u1         - 32nd notes : quarter note (usually 8)
     *
     * Metacode: u1         - 0x59  Key Signature
     *           varlen     - 2
@@ -161,7 +162,7 @@ import java.util.List;
     *
     * Metacode: u1         - 0x51  Tempo
     *           varlen     - 3  
-    *           u3         - quarter note length in microseconds
+    *           u3         - quarter note length : microseconds
     */
 
 
@@ -169,7 +170,7 @@ import java.util.List;
     *
     * The MidiFile class contains the parsed data from the Midi File.
     * It contains:
-    * - All the tracks in the midi file, including all MidiNotes per track.
+    * - All the tracks : the midi file, including all MidiNotes per track.
     * - The time signature (e.g. 4/4, 3/4, 6/8)
     * - The number of pulses per quarter note.
     * - The tempo (number of microseconds per quarter note).
@@ -208,7 +209,7 @@ import java.util.List;
        private int trackmode;         /** 0 (single track), 1 (simultaneous tracks) 2 (independent tracks) */
        private TimeSignature timesig;    /** The time signature */
        private int quarternote;          /** The number of pulses per quarter note */
-       private int totalpulses;          /** The total length of the song, in pulses */
+       private int totalpulses;          /** The total length of the song, : pulses */
        private boolean trackPerChannel;     /** True if we've split each channel into a track */
 
        /* The list of Midi Events */
@@ -471,7 +472,7 @@ import java.util.List;
         * class.  After reading the midi file, this object will contain:
         * - The raw list of midi events
         * - The Time Signature of the song
-        * - All the tracks in the song which contain notes. 
+        * - All the tracks : the song which contain notes. 
         * - The number, starttime, and duration of each note.
         */
        public void parse(MidiFileReader file, String filename) {
@@ -503,7 +504,7 @@ import java.util.List;
                }
            }
 
-           /* Get the length of the song in pulses */
+           /* Get the length of the song : pulses */
            for(MidiTrack track : tracks) {
                MidiNote last = track.getNotes().get(track.getNotes().size()-1);
                if (this.totalpulses < last.getStartTime() + last.getDuration()) {
@@ -561,7 +562,7 @@ import java.util.List;
            int tracklen = file.ReadInt();
            int trackend = tracklen + file.GetOffset();
 
-           int eventflag = 0;
+           int EventFlag = 0;
 
            while (file.GetOffset() < trackend) {
 
@@ -587,87 +588,87 @@ import java.util.List;
 
                if (peekevent >= EventNoteOff) { 
                    mevent.HasEventflag = true; 
-                   eventflag = file.ReadByte();
+                   mevent.EventFlag = file.ReadByte();
                }
 
                // Console.WriteLine("offset {0}: event {1} {2} start {3} delta {4}", 
-               //                   startoffset, eventflag, EventName(eventflag), 
-               //                   starttime, mevent.DeltaTime);
+               //                   startoffset, mevent.EventFlag, EventName(mevent.EventFlag), 
+               //                   starttime, DeltaTime);
 
-               if (eventflag >= EventNoteOn && eventflag < EventNoteOn + 16) {
-                   mevent.EventFlag = EventNoteOn;
-                   mevent.Channel = (eventflag - EventNoteOn);
-                   mevent.Notenumber = file.ReadByte();
-                   mevent.Velocity = file.ReadByte();
+               if (mevent.EventFlag >= EventNoteOn && mevent.EventFlag < EventNoteOn + 16) {
+            	   mevent.EventFlag = EventNoteOn;
+            	   mevent.Channel = (mevent.EventFlag - EventNoteOn);
+            	   mevent.Notenumber = file.ReadByte();
+            	   mevent.Velocity = file.ReadByte();
                }
-               else if (eventflag >= EventNoteOff && eventflag < EventNoteOff + 16) {
-                   mevent.EventFlag = EventNoteOff;
-                   mevent.Channel = (byte)(eventflag - EventNoteOff);
-                   mevent.Notenumber = file.ReadByte();
-                   mevent.Velocity = file.ReadByte();
+               else if (mevent.EventFlag >= EventNoteOff && mevent.EventFlag < EventNoteOff + 16) {
+            	   mevent.EventFlag = EventNoteOff;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventNoteOff);
+            	   mevent.Notenumber = file.ReadByte();
+            	   mevent.Velocity = file.ReadByte();
                }
-               else if (eventflag >= EventKeyPressure && 
-                        eventflag < EventKeyPressure + 16) {
-                   mevent.EventFlag = EventKeyPressure;
-                   mevent.Channel = (byte)(eventflag - EventKeyPressure);
-                   mevent.Notenumber = file.ReadByte();
-                   mevent.KeyPressure = file.ReadByte();
+               else if (mevent.EventFlag >= EventKeyPressure && 
+                        mevent.EventFlag < EventKeyPressure + 16) {
+            	   mevent.EventFlag = EventKeyPressure;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventKeyPressure);
+            	   mevent.Notenumber = file.ReadByte();
+            	   mevent.KeyPressure = file.ReadByte();
                }
-               else if (eventflag >= EventControlChange && 
-                        eventflag < EventControlChange + 16) {
-                   mevent.EventFlag = EventControlChange;
-                   mevent.Channel = (byte)(eventflag - EventControlChange);
-                   mevent.ControlNum = file.ReadByte();
-                   mevent.ControlValue = file.ReadByte();
+               else if (mevent.EventFlag >= EventControlChange && 
+                        mevent.EventFlag < EventControlChange + 16) {
+            	   mevent.EventFlag = EventControlChange;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventControlChange);
+            	   mevent.ControlNum = file.ReadByte();
+            	   mevent.ControlValue = file.ReadByte();
                }
-               else if (eventflag >= EventProgramChange && 
-                        eventflag < EventProgramChange + 16) {
-                   mevent.EventFlag = EventProgramChange;
-                   mevent.Channel = (byte)(eventflag - EventProgramChange);
-                   mevent.Instrument = file.ReadByte();
+               else if (mevent.EventFlag >= EventProgramChange && 
+                        mevent.EventFlag < EventProgramChange + 16) {
+            	   mevent.EventFlag = EventProgramChange;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventProgramChange);
+            	   mevent.Instrument = file.ReadByte();
                }
-               else if (eventflag >= EventChannelPressure && 
-                        eventflag < EventChannelPressure + 16) {
-                   mevent.EventFlag = EventChannelPressure;
-                   mevent.Channel = (byte)(eventflag - EventChannelPressure);
-                   mevent.ChanPressure = file.ReadByte();
+               else if (mevent.EventFlag >= EventChannelPressure && 
+                        mevent.EventFlag < EventChannelPressure + 16) {
+            	   mevent.EventFlag = EventChannelPressure;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventChannelPressure);
+            	   mevent.ChanPressure = file.ReadByte();
                }
-               else if (eventflag >= EventPitchBend && 
-                        eventflag < EventPitchBend + 16) {
-                   mevent.EventFlag = EventPitchBend;
-                   mevent.Channel = (byte)(eventflag - EventPitchBend);
-                   mevent.PitchBend = file.ReadShort();
+               else if (mevent.EventFlag >= EventPitchBend && 
+                        mevent.EventFlag < EventPitchBend + 16) {
+            	   mevent.EventFlag = EventPitchBend;
+            	   mevent.Channel = (char)(mevent.EventFlag - EventPitchBend);
+            	   mevent.PitchBend = file.ReadShort();
                }
-               else if (eventflag == SysexEvent1) {
-                   mevent.EventFlag = SysexEvent1;
-                   mevent.Metalength = file.ReadVarlen();
-                   mevent.Value = file.ReadBytes(mevent.Metalength);
+               else if (mevent.EventFlag == SysexEvent1) {
+            	   mevent.EventFlag = SysexEvent1;
+            	   mevent.Metalength = file.ReadVarlen();
+            	   mevent.Value = file.ReadBytes(mevent.Metalength);
                }
-               else if (eventflag == SysexEvent2) {
-                   mevent.EventFlag = SysexEvent2;
-                   mevent.Metalength = file.ReadVarlen();
-                   mevent.Value = file.ReadBytes(mevent.Metalength);
+               else if (mevent.EventFlag == SysexEvent2) {
+            	   mevent.EventFlag = SysexEvent2;
+            	   mevent.Metalength = file.ReadVarlen();
+            	   mevent.Value = file.ReadBytes(mevent.Metalength);
                }
-               else if (eventflag == MetaEvent) {
-                   mevent.EventFlag = MetaEvent;
-                   mevent.Metaevent = file.ReadByte();
-                   mevent.Metalength = file.ReadVarlen();
-                   mevent.Value = file.ReadBytes(mevent.Metalength);
+               else if (mevent.EventFlag == MetaEvent) {
+            	   mevent.EventFlag = MetaEvent;
+            	   mevent.Metaevent = file.ReadByte();
+            	   mevent.Metalength = file.ReadVarlen();
+            	   mevent.Value = file.ReadBytes(mevent.Metalength);
                    if (mevent.Metaevent == MetaEventTimeSignature) {
                        if (mevent.Metalength < 2) {
                            // throw new MidiFileException(
-                           //  "Meta Event Time Signature len == " + mevent.Metalength  + 
+                           //  "Meta Event Time Signature len == " + Metalength  + 
                            //  " != 4", file.GetOffset());
-                           mevent.Numerator = 0;
-                           mevent.Denominator = 4;
+                    	   mevent.Numerator = 0;
+                    	   mevent.Denominator = 4;
                        }
                        else if (mevent.Metalength >= 2 && mevent.Metalength < 4) {
-                           mevent.Numerator = mevent.Value[0];
-                           mevent.Denominator = (int)Math.pow(2,mevent.Value[1]);
+                    	   mevent.Numerator = mevent.Value[0];
+                    	   mevent.Denominator = (int)Math.pow(2,mevent.Value[1]);
                        }
                        else {
-                           mevent.Numerator = mevent.Value[0];
-                           mevent.Denominator = (int) Math.pow(2, mevent.Value[1]);
+                    	   mevent.Numerator = mevent.Value[0];
+                    	   mevent.Denominator = (int) Math.pow(2, mevent.Value[1]);
                        }
                    }
                    else if (mevent.Metaevent == MetaEventTempo) {
@@ -706,29 +707,29 @@ import java.util.List;
        }
 
        /** Write a variable length number to the buffer at the given offset.
-        * Return the number of bytes written.
+        * Return the number of chars written.
         */
-       static int VarlenToBytes(int num, byte[] buf, int offset) {
-           byte b1 = (byte) ((num >> 21) & 0x7F);
-           byte b2 = (byte) ((num >> 14) & 0x7F);
-           byte b3 = (byte) ((num >>  7) & 0x7F);
-           byte b4 = (byte) (num & 0x7F);
+       static int VarlenTochars(int num, char[] buf, int offset) {
+           char b1 = (char) ((num >> 21) & 0x7F);
+           char b2 = (char) ((num >> 14) & 0x7F);
+           char b3 = (char) ((num >>  7) & 0x7F);
+           char b4 = (char) (num & 0x7F);
 
            if (b1 > 0) {
-               buf[offset]   = (byte)(b1 | 0x80);
-               buf[offset+1] = (byte)(b2 | 0x80);
-               buf[offset+2] = (byte)(b3 | 0x80);
+               buf[offset]   = (char)(b1 | 0x80);
+               buf[offset+1] = (char)(b2 | 0x80);
+               buf[offset+2] = (char)(b3 | 0x80);
                buf[offset+3] = b4;
                return 4;
            }
            else if (b2 > 0) {
-               buf[offset]   = (byte)(b2 | 0x80);
-               buf[offset+1] = (byte)(b3 | 0x80);
+               buf[offset]   = (char)(b2 | 0x80);
+               buf[offset+1] = (char)(b3 | 0x80);
                buf[offset+2] = b4;
                return 3;
            }
            else if (b3 > 0) {
-               buf[offset]   = (byte)(b3 | 0x80);
+               buf[offset]   = (char)(b3 | 0x80);
                buf[offset+1] = b4;
                return 2;
            }
@@ -738,21 +739,21 @@ import java.util.List;
            }
        }
 
-       /** Write a 4-byte integer to data[offset : offset+4] */
-       private static void IntToBytes(int value, byte[] data, int offset) {
-           data[offset] = (byte)( (value >> 24) & 0xFF );
-           data[offset+1] = (byte)( (value >> 16) & 0xFF );
-           data[offset+2] = (byte)( (value >> 8) & 0xFF );
-           data[offset+3] = (byte)( value & 0xFF );
+       /** Write a 4-char integer to data[offset : offset+4] */
+       private static void IntTochars(int value, char[] data, int offset) {
+           data[offset] = (char)( (value >> 24) & 0xFF );
+           data[offset+1] = (char)( (value >> 16) & 0xFF );
+           data[offset+2] = (char)( (value >> 8) & 0xFF );
+           data[offset+3] = (char)( value & 0xFF );
        }
 
-       /** Calculate the track length (in bytes) given a list of Midi events */
+       /** Calculate the track length (in chars) given a list of Midi events */
        private static int GetTrackLength(List<MidiEvent> events) {
            int len = 0;
-           byte[] buf = new byte[1024];
-           foreach (MidiEvent mevent in events) {
-               len += VarlenToBytes(mevent.DeltaTime, buf, 0);
-               len += 1;  /* for eventflag */
+           char[] buf = new char[1024];
+           for (MidiEvent mevent : events) {
+               len += VarlenTochars(mevent.DeltaTime, buf, 0);
+               len += 1;  /* for mevent.EventFlag */
                switch (mevent.EventFlag) {
                    case EventNoteOn: len += 2; break;
                    case EventNoteOff: len += 2; break;
@@ -764,12 +765,12 @@ import java.util.List;
 
                    case SysexEvent1: 
                    case SysexEvent2:
-                       len += VarlenToBytes(mevent.Metalength, buf, 0); 
+                       len += VarlenTochars(mevent.Metalength, buf, 0); 
                        len += mevent.Metalength;
                        break;
                    case MetaEvent: 
                        len += 1; 
-                       len += VarlenToBytes(mevent.Metalength, buf, 0); 
+                       len += VarlenTochars(mevent.Metalength, buf, 0); 
                        len += mevent.Metalength;
                        break;
                    default: break;
@@ -785,102 +786,102 @@ import java.util.List;
         *
         *  Return true on success, and false on error.
         */
-       private static bool 
-       WriteEvents(Stream file, List<MidiEvent>[] events, int trackmode, int quarter) {
+       private static boolean 
+       WriteEvents(FileWriter file, List<MidiEvent>[] events, int trackmode, int quarter) {
            try {
-               byte[] buf = new byte[4096];
+               char[] buf = new char[4096];
 
                /* Write the MThd, len = 6, track mode, number tracks, quarter note */
-               file.Write(ASCIIEncoding.ASCII.GetBytes("MThd"), 0, 4);
-               IntToBytes(6, buf, 0);
-               file.Write(buf, 0, 4);
-               buf[0] = (byte)(trackmode >> 8); 
-               buf[1] = (byte)(trackmode & 0xFF);
-               file.Write(buf, 0, 2);
+               file.write("MThd", 0, 4);
+               IntTochars(6, buf, 0);
+               file.write(buf, 0, 4);
+               buf[0] = (char)(trackmode >> 8); 
+               buf[1] = (char)(trackmode & 0xFF);
+               file.write(buf, 0, 2);
                buf[0] = 0; 
-               buf[1] = (byte)events.Length;
-               file.Write(buf, 0, 2);
-               buf[0] = (byte)(quarter >> 8); 
-               buf[1] = (byte)(quarter & 0xFF);
-               file.Write(buf, 0, 2);
+               buf[1] = (char)events.Length;
+               file.write(buf, 0, 2);
+               buf[0] = (char)(quarter >> 8); 
+               buf[1] = (char)(quarter & 0xFF);
+               file.write(buf, 0, 2);
 
-               foreach (List<MidiEvent> list in events) {
+               for (List<MidiEvent> list : events) {
                    /* Write the MTrk header and track length */
-                   file.Write(ASCIIEncoding.ASCII.GetBytes("MTrk"), 0, 4);
+                   file.write(ASCIIEncoding.ASCII.Getchars("MTrk"), 0, 4);
                    int len = GetTrackLength(list);
-                   IntToBytes(len, buf, 0);
-                   file.Write(buf, 0, 4);
+                   IntTochars(len, buf, 0);
+                   file.write(buf, 0, 4);
 
-                   foreach (MidiEvent mevent in list) {
-                       int varlen = VarlenToBytes(mevent.DeltaTime, buf, 0);
-                       file.Write(buf, 0, varlen);
+                   for (MidiEvent mevent : list) {
+                       int varlen = VarlenTochars(DeltaTime, buf, 0);
+                       file.write(buf, 0, varlen);
 
                        if (mevent.EventFlag == SysexEvent1 ||
                            mevent.EventFlag == SysexEvent2 ||
                            mevent.EventFlag == MetaEvent) {
-                           buf[0] = mevent.EventFlag;
+                           buf[0] = (char) mevent.EventFlag;
                        }
                        else {
-                           buf[0] = (byte)(mevent.EventFlag + mevent.Channel);
+                           buf[0] = (char)(mevent.EventFlag + Channel);
                        }
-                       file.Write(buf, 0, 1);
+                       file.write(buf, 0, 1);
 
                        if (mevent.EventFlag == EventNoteOn) {
-                           buf[0] = mevent.Notenumber;
-                           buf[1] = mevent.Velocity;
-                           file.Write(buf, 0, 2);
+                           buf[0] = Notenumber;
+                           buf[1] = Velocity;
+                           file.write(buf, 0, 2);
                        }
                        else if (mevent.EventFlag == EventNoteOff) {
-                           buf[0] = mevent.Notenumber;
-                           buf[1] = mevent.Velocity;
-                           file.Write(buf, 0, 2);
+                           buf[0] = Notenumber;
+                           buf[1] = Velocity;
+                           file.write(buf, 0, 2);
                        }
                        else if (mevent.EventFlag == EventKeyPressure) {
-                           buf[0] = mevent.Notenumber;
-                           buf[1] = mevent.KeyPressure;
-                           file.Write(buf, 0, 2);
+                           buf[0] = Notenumber;
+                           buf[1] = KeyPressure;
+                           file.write(buf, 0, 2);
                        }
                        else if (mevent.EventFlag == EventControlChange) {
-                           buf[0] = mevent.ControlNum;
-                           buf[1] = mevent.ControlValue;
-                           file.Write(buf, 0, 2);
+                           buf[0] = ControlNum;
+                           buf[1] = ControlValue;
+                           file.write(buf, 0, 2);
                        }
                        else if (mevent.EventFlag == EventProgramChange) {
-                           buf[0] = mevent.Instrument;
-                           file.Write(buf, 0, 1);
+                           buf[0] = Instrument;
+                           file.write(buf, 0, 1);
                        }
                        else if (mevent.EventFlag == EventChannelPressure) {
-                           buf[0] = mevent.ChanPressure;
-                           file.Write(buf, 0, 1);
+                           buf[0] = ChanPressure;
+                           file.write(buf, 0, 1);
                        }
                        else if (mevent.EventFlag == EventPitchBend) {
-                           buf[0] = (byte)(mevent.PitchBend >> 8);
-                           buf[1] = (byte)(mevent.PitchBend & 0xFF);
-                           file.Write(buf, 0, 2);
+                           buf[0] = (char)(PitchBend >> 8);
+                           buf[1] = (char)(PitchBend & 0xFF);
+                           file.write(buf, 0, 2);
                        }
                        else if (mevent.EventFlag == SysexEvent1) {
-                           int offset = VarlenToBytes(mevent.Metalength, buf, 0);
-                           Array.Copy(mevent.Value, 0, buf, offset, mevent.Value.Length);
-                           file.Write(buf, 0, offset + mevent.Value.Length);
+                           int offset = VarlenTochars(Metalength, buf, 0);
+                           Array.Copy(Value, 0, buf, offset, Value.Length);
+                           file.write(buf, 0, offset + Value.Length);
                        }
                        else if (mevent.EventFlag == SysexEvent2) {
-                           int offset = VarlenToBytes(mevent.Metalength, buf, 0);
-                           Array.Copy(mevent.Value, 0, buf, offset, mevent.Value.Length);
-                           file.Write(buf, 0, offset + mevent.Value.Length);
+                           int offset = VarlenTochars(Metalength, buf, 0);
+                           Array.Copy(Value, 0, buf, offset, Value.Length);
+                           file.write(buf, 0, offset + Value.Length);
                        }
-                       else if (mevent.EventFlag == MetaEvent && mevent.Metaevent == MetaEventTempo) {
-                           buf[0] = mevent.Metaevent;
+                       else if (mevent.EventFlag == MetaEvent && Metaevent == MetaEventTempo) {
+                           buf[0] = Metaevent;
                            buf[1] = 3;
-                           buf[2] = (byte)((mevent.Tempo >> 16) & 0xFF);
-                           buf[3] = (byte)((mevent.Tempo >> 8) & 0xFF);
-                           buf[4] = (byte)(mevent.Tempo & 0xFF);
-                           file.Write(buf, 0, 5);
+                           buf[2] = (char)((Tempo >> 16) & 0xFF);
+                           buf[3] = (char)((Tempo >> 8) & 0xFF);
+                           buf[4] = (char)(Tempo & 0xFF);
+                           file.write(buf, 0, 5);
                        }
                        else if (mevent.EventFlag == MetaEvent) {
-                           buf[0] = mevent.Metaevent;
-                           int offset = VarlenToBytes(mevent.Metalength, buf, 1) + 1;
-                           Array.Copy(mevent.Value, 0, buf, offset, mevent.Value.Length);
-                           file.Write(buf, 0, offset + mevent.Value.Length);
+                           buf[0] = Metaevent;
+                           int offset = VarlenTochars(Metalength, buf, 1) + 1;
+                           Array.Copy(Value, 0, buf, offset, Value.Length);
+                           file.write(buf, 0, offset + Value.Length);
                        }
                    }
                }
@@ -900,8 +901,8 @@ import java.util.List;
                List<MidiEvent> origevents = origlist[tracknum];
                List<MidiEvent> newevents = new List<MidiEvent>(origevents.Count);
                newlist[tracknum] = newevents;
-               foreach (MidiEvent mevent in origevents) {
-                   newevents.Add( mevent.Clone() );
+               for (MidiEvent mevent : origevents) {
+                   newevents.Add( Clone() );
                }
            }
            return newlist;
@@ -910,13 +911,13 @@ import java.util.List;
        /** Create a new Midi tempo event, with the given tempo  */
        private static MidiEvent CreateTempoEvent(int tempo) {
            MidiEvent mevent = new MidiEvent();
-           mevent.DeltaTime = 0;
-           mevent.StartTime = 0;
-           mevent.HasEventflag = true;
+           DeltaTime = 0;
+           StartTime = 0;
+           Hasmevent.EventFlag = true;
            mevent.EventFlag = MetaEvent;
-           mevent.Metaevent = MetaEventTempo;
-           mevent.Metalength = 3;
-           mevent.Tempo = tempo;
+           Metaevent = MetaEventTempo;
+           Metalength = 3;
+           Tempo = tempo;
            return mevent;
        }
 
@@ -927,12 +928,12 @@ import java.util.List;
         */ 
        private static void 
        UpdateControlChange(List<MidiEvent> newevents, MidiEvent changeEvent) {
-           foreach (MidiEvent mevent in newevents) {
-               if ((mevent.EventFlag == changeEvent.EventFlag) &&
-                   (mevent.Channel == changeEvent.Channel) &&
-                   (mevent.ControlNum == changeEvent.ControlNum)) {
+    	   for (MidiEvent mevent : newevents) {
+               if ((mevent.EventFlag == changeEvent.mevent.EventFlag) &&
+                   (Channel == changeEvent.Channel) &&
+                   (ControlNum == changeEvent.ControlNum)) {
 
-                   mevent.ControlValue = changeEvent.ControlValue;
+                   ControlValue = changeEvent.ControlValue;
                    return;
                }
            }
@@ -952,26 +953,26 @@ import java.util.List;
                List<MidiEvent> newevents = new List<MidiEvent>(events.Count);
                newlist[tracknum] = newevents;
 
-               bool foundEventAfterPause = false;
-               foreach (MidiEvent mevent in events) {
+               boolean foundEventAfterPause = false;
+               for (MidiEvent mevent : events) {
 
-                   if (mevent.StartTime < pauseTime) {
+                   if (StartTime < pauseTime) {
                        if (mevent.EventFlag == EventNoteOn ||
                            mevent.EventFlag == EventNoteOff) {
 
                            /* Skip NoteOn/NoteOff event */
                        }
                        else if (mevent.EventFlag == EventControlChange) {
-                           mevent.DeltaTime = 0;
+                           DeltaTime = 0;
                            UpdateControlChange(newevents, mevent);
                        }
                        else {
-                           mevent.DeltaTime = 0;
+                           DeltaTime = 0;
                            newevents.Add(mevent);
                        }
                    }
                    else if (!foundEventAfterPause) {
-                       mevent.DeltaTime = (mevent.StartTime - pauseTime);
+                       DeltaTime = (StartTime - pauseTime);
                        newevents.Add(mevent);
                        foundEventAfterPause = true;
                    }
@@ -989,15 +990,15 @@ import java.util.List;
         * before performing the write.
         * Return true if the file was saved successfully, else false.
         */
-       public bool ChangeSound(string destfile, MidiOptions options) {
+       public boolean ChangeSound(String destfile, MidiOptions options) {
            return Write(destfile, options);
        }
 
-       public bool Write(string destfile, MidiOptions options) {
+       public boolean Write(String destfile, MidiOptions options) {
            try {
                FileStream stream;
                stream = new FileStream(destfile, FileMode.Create);
-               bool result = Write(stream, options);
+               boolean result = Write(stream, options);
                stream.Close();
                return result;
            }
@@ -1011,7 +1012,7 @@ import java.util.List;
         * before performing the write.
         * Return true if the file was saved successfully, else false.
         */
-       public bool Write(Stream stream, MidiOptions options) {
+       public boolean Write(Stream stream, MidiOptions options) {
            List<MidiEvent>[] newevents = events;
            if (options != null) {
                newevents = ApplyOptionsToEvents(options);
@@ -1036,7 +1037,7 @@ import java.util.List;
 
            /* A midifile can contain tracks with notes and tracks without notes.
             * The options.tracks and options.instruments are for tracks with notes.
-            * So the track numbers in 'options' may not match correctly if the
+            * So the track numbers : 'options' may not match correctly if the
             * midi file has tracks without notes. Re-compute the instruments, and 
             * tracks to keep.
             */
@@ -1067,17 +1068,17 @@ import java.util.List;
 
            /* Change the note number (transpose), instrument, and tempo */
            for (int tracknum = 0; tracknum < newevents.Length; tracknum++) {
-               foreach (MidiEvent mevent in newevents[tracknum]) {
-                   int num = mevent.Notenumber + options.transpose;
+        	   for (MidiEvent mevent : newevents[tracknum]) {
+                   int num = Notenumber + options.transpose;
                    if (num < 0)
                        num = 0;
                    if (num > 127)
                        num = 127;
-                   mevent.Notenumber = (byte)num;
+                   Notenumber = (char)num;
                    if (!options.useDefaultInstruments) {
-                       mevent.Instrument = (byte)instruments[tracknum];
+                       Instrument = (char)instruments[tracknum];
                    }
-                   mevent.Tempo = options.tempo;
+                   Tempo = options.tempo;
                }
            }
 
@@ -1151,20 +1152,20 @@ import java.util.List;
 
            /* Change the note number (transpose), instrument, and tempo */
            for (int tracknum = 0; tracknum < newevents.Length; tracknum++) {
-               foreach (MidiEvent mevent in newevents[tracknum]) {
-                   int num = mevent.Notenumber + options.transpose;
+        	   for (MidiEvent mevent : newevents[tracknum]) {
+                   int num = Notenumber + options.transpose;
                    if (num < 0)
                        num = 0;
                    if (num > 127)
                        num = 127;
-                   mevent.Notenumber = (byte)num;
-                   if (!keepchannel[mevent.Channel]) {
-                       mevent.Velocity = 0;
+                   Notenumber = (char)num;
+                   if (!keepchannel[Channel]) {
+                       Velocity = 0;
                    }
                    if (!options.useDefaultInstruments) {
-                       mevent.Instrument = (byte)instruments[mevent.Channel];
+                       Instrument = (char)instruments[Channel];
                    }
-                   mevent.Tempo = options.tempo;
+                   Tempo = options.tempo;
                }
            }
            if (options.pauseTime != 0) {
@@ -1218,8 +1219,8 @@ import java.util.List;
        public static void
        ShiftTime(List<MidiTrack> tracks, int amount)
        {
-           foreach (MidiTrack track in tracks) {
-               foreach (MidiNote note in track.Notes) {
+    	   for (MidiTrack track : tracks) {
+    		   for (MidiNote note : track.Notes) {
                    note.StartTime += amount;
                }
            }
@@ -1229,8 +1230,8 @@ import java.util.List;
        public static void
        Transpose(List<MidiTrack> tracks, int amount)
        {
-           foreach (MidiTrack track in tracks) {
-               foreach (MidiNote note in track.Notes) {
+    	   for (MidiTrack track : tracks) {
+    		   for (MidiNote note : track.Notes) {
                    note.Number += amount;
                    if (note.Number < 0) {
                        note.Number = 0;
@@ -1321,7 +1322,7 @@ import java.util.List;
            int prevlow   = 45; /* A3, bottom of bass staff */
            int startindex = 0;
 
-           foreach (MidiNote note in notes) {
+           for (MidiNote note : notes) {
                int high, low, highExact, lowExact;
                
                int number = note.Number;
@@ -1331,7 +1332,7 @@ import java.util.List;
                    startindex++;
                }
 
-               /* I've tried several algorithms for splitting a track in two,
+               /* I've tried several algorithms for splitting a track : two,
                 * and the one below seems to work the best:
                 * - If this note is more than an octave from the high/low notes
                 *   (that start exactly at this start time), choose the closest one.
@@ -1406,7 +1407,7 @@ import java.util.List;
        }
 
 
-       /** Combine the notes in the given tracks into a single MidiTrack. 
+       /** Combine the notes : the given tracks into a single MidiTrack. 
         *  The individual tracks are already sorted.  To merge them, we
         *  use a mergesort-like algorithm.
         */
@@ -1420,7 +1421,7 @@ import java.util.List;
            }
            else if (tracks.Count == 1) {
                MidiTrack track = tracks[0];
-               foreach (MidiNote note in track.Notes) {
+               for (MidiNote note : track.Notes) {
                    result.AddNote(note);
                }
                return result;
@@ -1479,7 +1480,7 @@ import java.util.List;
        }
 
 
-       /** Combine the notes in all the tracks given into two MidiTracks,
+       /** Combine the notes : all the tracks given into two MidiTracks,
         * and return them.
         * 
         * This function is intended for piano songs, when we want to display
@@ -1493,7 +1494,7 @@ import java.util.List;
            List<MidiTrack> result = SplitTrack(single, measurelen);
 
            List<MidiEvent> lyrics = new List<MidiEvent>();
-           foreach (MidiTrack track in tracks) {
+           for (MidiTrack track : tracks) {
                if (track.Lyrics != null) {
                    lyrics.AddRange(track.Lyrics);
                }
@@ -1507,15 +1508,15 @@ import java.util.List;
        }
 
 
-       /** Check that the MidiNote start times are in increasing order.
+       /** Check that the MidiNote start times are : increasing order.
         * This is for debugging purposes.
         */
        private static void CheckStartTimes(List<MidiTrack> tracks) {
-           foreach (MidiTrack track in tracks) {
+    	   for (MidiTrack track : tracks) {
                int prevtime = -1;
-               foreach (MidiNote note in track.Notes) {
+               for (MidiNote note : track.Notes) {
                    if (note.StartTime < prevtime) {
-                       throw new System.ArgumentException("start times not in increasing order");
+                       throw new System.ArgumentException("start times not : increasing order");
                    }
                    prevtime = note.StartTime;
                }
@@ -1523,7 +1524,7 @@ import java.util.List;
        }
 
 
-       /** In Midi Files, time is measured in pulses.  Notes that have
+       /** : Midi Files, time is measured : pulses.  Notes that have
         * pulse times that are close together (like within 10 pulses)
         * will sound like they're the same chord.  We want to draw
         * these notes as a single chord, it makes the sheet music much
@@ -1532,17 +1533,17 @@ import java.util.List;
         *
         * The SymbolSpacing class only aligns notes that have exactly the same
         * start times.  Notes with slightly different start times will
-        * appear in separate vertical columns.  This isn't what we want.
+        * appear : separate vertical columns.  This isn't what we want.
         * We want to align notes with approximately the same start times.
         * So, this function is used to assign the same starttime for notes
         * that are close together (timewise).
         */
        public static void
        RoundStartTimes(List<MidiTrack> tracks, int millisec, TimeSignature time) {
-           /* Get all the starttimes in all tracks, in sorted order */
+           /* Get all the starttimes : all tracks, : sorted order */
            List<int> starttimes = new List<int>();
-           foreach (MidiTrack track in tracks) {
-               foreach (MidiNote note in track.Notes) {
+           for (MidiTrack track : tracks) {
+        	   for (MidiNote note : track.Notes) {
                    starttimes.Add( note.StartTime );
                }
            }
@@ -1561,10 +1562,10 @@ import java.util.List;
            CheckStartTimes(tracks);
 
            /* Adjust the note starttimes, so that it matches one of the starttimes values */
-           foreach (MidiTrack track in tracks) {
+           foreach (MidiTrack track : tracks) {
                int i = 0;
 
-               foreach (MidiNote note in track.Notes) {
+               for (MidiNote note : track.Notes) {
                    while (i < starttimes.Count &&
                           note.StartTime - interval > starttimes[i]) {
                        i++;
@@ -1581,8 +1582,8 @@ import java.util.List;
        }
 
 
-       /** We want note durations to span up to the next note in general.
-        * The sheet music looks nicer that way.  In contrast, sheet music
+       /** We want note durations to span up to the next note : general.
+        * The sheet music looks nicer that way.  : contrast, sheet music
         * with lots of 16th/32nd notes separated by small rests doesn't
         * look as nice.  Having nice looking sheet music is more important
         * than faithfully representing the Midi File data.
@@ -1593,7 +1594,7 @@ import java.util.List;
        public static void
        RoundDurations(List<MidiTrack> tracks, int quarternote) {
 
-           foreach (MidiTrack track in tracks ) {
+    	   for (MidiTrack track : tracks ) {
                MidiNote prevNote = null;
                for (int i = 0; i < track.Notes.Count-1; i++) {
                    MidiNote note1 = track.Notes[i];
@@ -1628,7 +1629,7 @@ import java.util.List;
 
                    /* Special case: If the previous note's duration
                     * matches this note's duration, we can make a notepair.
-                    * So don't expand the duration in that case.
+                    * So don't expand the duration : that case.
                     */
                    if ((prevNote.StartTime + prevNote.Duration == note1.StartTime) &&
                        (prevNote.Duration == note1.Duration)) {
@@ -1653,7 +1654,7 @@ import java.util.List;
            int[] channelInstruments = new int[16];
            for (MidiEvent mevent : events) {
                if (mevent.EventFlag == EventProgramChange) {
-                   channelInstruments[mevent.Channel] = mevent.Instrument;
+                   channelInstruments[Channel] = Instrument;
                }
            }
            channelInstruments[9] = 128; /* Channel 9 = Percussion */
@@ -1688,12 +1689,12 @@ import java.util.List;
            List<int> result = new List<int>();
 
            int pulses_per_second = (int) (1000000.0 / timesig.Tempo * timesig.Quarter);
-           int minmeasure = pulses_per_second / 2;  /* The minimum measure length in pulses */
-           int maxmeasure = pulses_per_second * 4;  /* The maximum measure length in pulses */
+           int minmeasure = pulses_per_second / 2;  /* The minimum measure length : pulses */
+           int maxmeasure = pulses_per_second * 4;  /* The maximum measure length : pulses */
 
-           /* Get the start time of the first note in the midi file. */
+           /* Get the start time of the first note : the midi file. */
            int firstnote = timesig.Measure * 5;
-           foreach (MidiTrack track in tracks) {
+           for (MidiTrack track : tracks) {
                if (firstnote > track.Notes[0].StartTime) {
                    firstnote = track.Notes[0].StartTime;
                }
@@ -1702,9 +1703,9 @@ import java.util.List;
            /* interval = 0.06 seconds, converted into pulses */
            int interval = timesig.Quarter * 60000 / timesig.Tempo;
 
-           foreach (MidiTrack track in tracks) {
+           for (MidiTrack track : tracks) {
                int prevtime = 0;
-               foreach (MidiNote note in track.Notes) {
+               for (MidiNote note : track.Notes) {
                    if (note.StartTime - prevtime <= interval)
                        continue;
 
@@ -1731,7 +1732,7 @@ import java.util.List;
        /** Return the last start time */
        public int EndTime() {
            int lastStart = 0;
-           foreach (MidiTrack track in tracks) {
+           for (MidiTrack track : tracks) {
                if (track.Notes.Count == 0) {
                    continue;
                }
@@ -1742,8 +1743,8 @@ import java.util.List;
        }
 
        /** Return true if this midi file has lyrics */
-       public bool HasLyrics() {
-           foreach (MidiTrack track in tracks) {
+       public boolean HasLyrics() {
+    	   for (MidiTrack track : tracks) {
                if (track.Lyrics != null) {
                    return true;
                }
@@ -1754,7 +1755,7 @@ import java.util.List;
        public override String ToString() {
            String result = "Midi File tracks=" + tracks.Count + " quarter=" + quarternote + "\n";
            result += Time.ToString() + "\n";
-           foreach(MidiTrack track in tracks) {
+           for(MidiTrack track : tracks) {
                result += track.ToString();
            }
            return result;

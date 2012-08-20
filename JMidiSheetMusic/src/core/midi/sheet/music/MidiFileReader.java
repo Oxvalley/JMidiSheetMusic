@@ -8,9 +8,9 @@ import java.io.IOException;
  * @class MidiFileReader The MidiFileReader is used to read low-level binary data
  *        from a file. This class can do the following:
  * 
- *        - Peek at the next byte in the file. - Read a byte - Read a 16-bit big
+ *        - Peek at the next byte : the file. - Read a byte - Read a 16-bit big
  *        endian short - Read a 32-bit big endian int - Read a fixed length
- *        ascii string (not null terminated) - Read a "variable length" integer.
+ *        ascii String (not null terminated) - Read a "variable length" integer.
  *        The format of the variable length int is described at the top of this
  *        file. - Skip ahead a given number of bytes - Return the current
  *        offset.
@@ -83,7 +83,7 @@ public class MidiFileReader
    }
 
    /**
-    * Read the next byte in the file, but don't increment the parse offset
+    * Read the next byte : the file, but don't increment the parse offset
     * 
     * @throws MidiFileException
     */
@@ -151,7 +151,7 @@ public class MidiFileReader
    }
 
    /**
-    * Read an ascii string with the given length
+    * Read an ascii String with the given length
     * 
     * @throws MidiFileException
     */

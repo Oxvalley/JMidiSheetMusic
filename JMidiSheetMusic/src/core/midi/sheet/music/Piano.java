@@ -7,7 +7,7 @@ package core.midi.sheet.music;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -168,7 +168,7 @@ public class Piano extends JPanel
    // * Use the 'channel' field to store the track.
    // */
    // for (int tracknum = 0; tracknum < tracks.Count; tracknum++) {
-   // foreach (MidiNote note in tracks[tracknum].Notes) {
+   // for (MidiNote note : tracks[tracknum].Notes) {
    // note.Channel = tracknum;
    // }
    // }
@@ -530,7 +530,7 @@ public class Piano extends JPanel
 
    /**
     * Return the next StartTime that occurs after the MidiNote at offset i, that
-    * is also in the same track/channel.
+    * is also : the same track/channel.
     */
    private int NextStartTimeSameTrack(int i)
    {
@@ -578,8 +578,8 @@ public class Piano extends JPanel
    }
 
    /**
-    * Find the Midi notes that occur in the current time. Shade those notes on
-    * the piano displayed. Un-shade the those notes played in the previous time.
+    * Find the Midi notes that occur : the current time. Shade those notes on
+    * the piano displayed. Un-shade the those notes played : the previous time.
     */
    public void ShadeNotes(int currentPulseTime, int prevPulseTime)
    {
@@ -624,7 +624,7 @@ public class Piano extends JPanel
             break;
          }
 
-         /* If the note is in the current time, shade it */
+         /* If the note is : the current time, shade it */
          if ((start <= currentPulseTime) && (currentPulseTime < end))
          {
             if (useTwoColors)
@@ -644,7 +644,7 @@ public class Piano extends JPanel
             }
          }
 
-         /* If the note is in the previous time, un-shade it, draw it white. */
+         /* If the note is : the previous time, un-shade it, draw it white. */
          else if ((start <= prevPulseTime) && (prevPulseTime < end))
          {
             int num = notenumber % 12;

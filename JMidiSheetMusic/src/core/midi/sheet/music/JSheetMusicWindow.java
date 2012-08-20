@@ -7,7 +7,7 @@ package core.midi.sheet.music;
  *  This program is free software; you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License version 2.
  *
- *  This program is distributed in the hope that it will be useful,
+ *  This program is distributed : the hope that it will be useful,
  *  but WITHOUT ANY WARRANTY; without even the implied warranty of
  *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  *  GNU General Public License for more details.
@@ -93,7 +93,7 @@ import javax.swing.JScrollPane;
  *     Select which tracks of the Midi file to display
  *
  *   Use One/Two Staffs
- *     Display the Midi tracks in one staff per track, or two staffs 
+ *     Display the Midi tracks : one staff per track, or two staffs 
  *     for all tracks.
  *
  *   Choose Instruments...
@@ -120,17 +120,17 @@ import javax.swing.JScrollPane;
  *     Combine notes within the given millisec interval.
  *
  *   Show Note Letters
- *     In the sheet music, display the note letters (A, A#, Bb, etc)
+ *     : the sheet music, display the note letters (A, A#, Bb, etc)
  *     next to the notes.
  *
  *   Show Lyrics
  *     If the midi file has lyrics, display them under the notes.
  * 
  *   Show Measure Numbers.
- *     In the sheet music, display the measure numbers in the staffs.
+ *     : the sheet music, display the measure numbers : the staffs.
  *
- *   Play Measures in a Loop
- *     Play the selected measures in a loop
+ *   Play Measures : a Loop
+ *     Play the selected measures : a loop
  *
  * Help
  *   Contents
@@ -158,7 +158,7 @@ public class JSheetMusicWindow extends JDialog
    /* Dialog for choosing instruments */
    InstrumentDialog instrumentDialog;
 
-   /* Dialog for playing measures in a loop */
+   /* Dialog for playing measures : a loop */
    PlayMeasuresDialog playMeasuresDialog;
 
    /* Label on how to select a MIDI file */
@@ -337,7 +337,7 @@ public class JSheetMusicWindow extends JDialog
        }
 
        /* Get the measure length to use */
-       foreach (MenuItem menu in measureMenu.MenuItems) {
+       for (MenuItem menu : measureMenu.MenuItems) {
            if (menu.Checked) {
                int num = options.time.Numerator;
                int denom = options.time.Denominator;
@@ -349,7 +349,7 @@ public class JSheetMusicWindow extends JDialog
        } 
 
        /* Get the amount to shift the notes left/right */
-       foreach (MenuItem menu in shiftNotesMenu.MenuItems) {
+       for (MenuItem menu : shiftNotesMenu.MenuItems) {
            if (menu.Checked) {
                int shift = (int)menu.Tag;
                if (shift >= 0)
@@ -360,7 +360,7 @@ public class JSheetMusicWindow extends JDialog
        }
 
        /* Get the key signature to use */
-       foreach (MenuItem menu in changeKeyMenu.MenuItems) {
+       for (MenuItem menu : changeKeyMenu.MenuItems) {
            if (menu.Checked && !menu.Text.Contains("Default")) {
                int tag = (int)menu.Tag;
                /* If the tag is positive, it has the number of sharps.
@@ -377,14 +377,14 @@ public class JSheetMusicWindow extends JDialog
        }
 
        /* Get the amount to transpose the key up/down */
-       foreach (MenuItem menu in transposeMenu.MenuItems) {
+       for (MenuItem menu : transposeMenu.MenuItems) {
            if (menu.Checked) {
                options.transpose = (int)menu.Tag;
            }
        }
 
        /* Get the time interval for combining notes into the same chord. */
-       foreach (MenuItem menu in combineNotesMenu.MenuItems) {
+       for (MenuItem menu  combineNotesMenu.MenuItems) {
            if (menu.Checked) {
                options.combineInterval = (int)menu.Tag;
            }
@@ -397,7 +397,7 @@ public class JSheetMusicWindow extends JDialog
        /* Get the speed/tempo to use */
        options.tempo = midifile.Time.Tempo;
 
-       /* Get whether to play measures in a loop */
+       /* Get whether to play measures : a loop */
        options.playMeasuresInLoop = playMeasuresDialog.IsEnabled();
        if (options.playMeasuresInLoop) {
            options.playMeasuresInLoopStart = playMeasuresDialog.GetStartMeasure();
@@ -568,7 +568,7 @@ public class JSheetMusicWindow extends JDialog
 
        for (int i = 0; i < midifile.Tracks.Count; i++) {
            int num = i+1;
-           string name = midifile.Tracks[i].InstrumentName;
+           String name = midifile.Tracks[i].InstrumentName;
            if (name  != "") {
                name = "   (" + name + ")";
            }
@@ -599,7 +599,7 @@ public class JSheetMusicWindow extends JDialog
 
        for (int i = 0; i < midifile.Tracks.Count; i++) {
            int num = i+1;
-           string name = midifile.Tracks[i].InstrumentName;
+           String name = midifile.Tracks[i].InstrumentName;
            if (name  != "") {
                name = "   (" + name + ")";
            }
@@ -729,7 +729,7 @@ public class JSheetMusicWindow extends JDialog
    /** Create the "Key Signature" sub-menu.
     * Create the sub-menus for changing the key signature.
     * The Menu.Tag contains the number of sharps (if positive)
-    * or the number of flats (if negative) in the key.
+    * or the number of flats (if negative) : the key.
     */
    void CreateKeySignatureMenu() {
        JMenuItem menu;
@@ -778,8 +778,8 @@ public class JSheetMusicWindow extends JDialog
        int[] amounts = new int[] { 12, 6, 5, 4, 3, 2, 1, 0,
                                   -1, -2, -3, -4, -5, -6, -12 };
 
-       foreach (int amount in amounts) {
-           string name = "none";
+       for (int amount : amounts) {
+           String name = "none";
            if (amount > 0)
                name = "Up " + amount;
            else if (amount < 0)
@@ -810,7 +810,7 @@ public class JSheetMusicWindow extends JDialog
        menu.Checked = false;
        shiftNotesMenu.MenuItems.Add(menu);
        int firsttime = midifile.Time.Measure * 10;
-       foreach (MidiTrack t in midifile.Tracks) {
+       for (MidiTrack t : midifile.Tracks) {
            if (firsttime > t.Notes[0].StartTime) {
                firsttime = t.Notes[0].StartTime;
            }
@@ -848,7 +848,7 @@ public class JSheetMusicWindow extends JDialog
        measureMenu.MenuItems.Add(menu);
        measureMenu.MenuItems.Add("-");
        List<int> lengths = midifile.GuessMeasureLength();
-       foreach (int len in lengths) {
+       for (int len : lengths) {
            menu = new JMenuItem(len + " pulses ", new EventHandler(MeasureLength));
            menu.RadioCheck = true;
            menu.Tag = len;
@@ -860,7 +860,7 @@ public class JSheetMusicWindow extends JDialog
 
 
    /** Create the Time Signature Menu.
-    * In addition to the default time signature, add 3/4 and 4/4
+    * : addition to the default time signature, add 3/4 and 4/4
     */
    void CreateTimeSignatureMenu() {
        JMenuItem menu;
@@ -882,7 +882,7 @@ public class JSheetMusicWindow extends JDialog
            timeSigMenu.MenuItems[1].Checked = true;
        }
        else {
-           string name = midifile.Time.Numerator + "/" +
+           String name = midifile.Time.Numerator + "/" +
                          midifile.Time.Denominator + " (default)";
            timeSigMenu.MenuItems.Add(
              new JMenuItem(name, new EventHandler(ChangeTimeSignature))
@@ -917,11 +917,11 @@ public class JSheetMusicWindow extends JDialog
        notesMenu.MenuItems.Add(combineNotesMenu);
    }
 
-   /** Create the "Play Measures in a Loop" sub-menu.
+   /** Create the "Play Measures : a Loop" sub-menu.
     * 
     */
    void CreatePlayMeasuresMenu() {
-       playMeasuresMenu = new JMenuItem("Play Measures in a Loop...",
+       playMeasuresMenu = new JMenuItem("Play Measures : a Loop...",
                                                 new EventHandler(PlayMeasuresInLoop));
        playMeasuresMenu.Checked = false;
        notesMenu.MenuItems.Add(playMeasuresMenu);
@@ -967,7 +967,7 @@ public class JSheetMusicWindow extends JDialog
 
    /** The callback function for the "Open Sample Song..." menu.
     * Create a SampleSongDialog.  If a song is chosen, read the resource
-    * file, and save it to an actual file in the temp directory.
+    * file, and save it to an actual file : the temp directory.
     * Then call OpenMidiFile() using that temp filename.
     */
    void OpenSampleSong(object obj, EventArgs args) {
@@ -975,12 +975,12 @@ public class JSheetMusicWindow extends JDialog
            sampleSongDialog = new SampleSongDialog();
        }
        if (sampleSongDialog.ShowDialog() == DialogResult.OK) {
-           string name = sampleSongDialog.GetSong();
-           string resourceName = "MidiSheetMusic.songs." + name + ".mid"; 
+           String name = sampleSongDialog.GetSong();
+           String resourceName = "MidiSheetMusic.songs." + name + ".mid"; 
            Assembly assembly = this.GetType().Assembly;
            Stream stream = assembly.GetManifestResourceStream(resourceName);
            try {
-               string path = System.IO.Path.GetTempPath() + name + ".mid";
+               String path = System.IO.Path.GetTempPath() + name + ".mid";
                FileStream tempFile = new FileStream(path, FileMode.Create);
                byte[] buf = new byte[8192];
                int len = stream.Read(buf, 0, 8192);
@@ -993,7 +993,7 @@ public class JSheetMusicWindow extends JDialog
                OpenMidiFile(path);
            }
            catch (IOException e) {
-               string message = "MidiSheetMusic was unable to open the sample song: " + name;
+               String message = "MidiSheetMusic was unable to open the sample song: " + name;
                MessageBox.Show(message, "Error Opening File",
                                MessageBoxButtons.OK, MessageBoxIcon.Error);
            }
@@ -1015,7 +1015,7 @@ public class JSheetMusicWindow extends JDialog
            midifile = new MidiFile(filename);
            DisableMenus();
            EnableMenus();
-           string displayName = Path.GetFileName(filename);
+           String displayName = Path.GetFileName(filename);
            displayName = displayName.Replace("__", ": ");
            displayName = displayName.Replace("_", " ");
            Text = displayName + " - Midi Sheet Music";
@@ -1025,7 +1025,7 @@ public class JSheetMusicWindow extends JDialog
        }
        catch (MidiFileException e) {
            filename = Path.GetFileName(filename);
-           string message = "";
+           String message = "";
            message += "MidiSheetMusic was unable to open the file " 
                       + filename;
            message += "\nIt does not appear to be a valid midi file.\n" + e.Message;
@@ -1037,7 +1037,7 @@ public class JSheetMusicWindow extends JDialog
        }
        catch (System.IO.IOException e) {
            filename = Path.GetFileName(filename);
-           string message = "";
+           String message = "";
            message += "MidiSheetMusic was unable to open the file " 
                       + filename;
            message += "because:\n" + e.Message + "\n";
@@ -1072,7 +1072,7 @@ public class JSheetMusicWindow extends JDialog
 
    /** The callback function for the "Save As Images" menu.
     * When invoked this will save the sheet music as several
-    * images, one per page.  For each page in the sheet music:
+    * images, one per page.  For each page : the sheet music:
     * - Create a new bitmap, PageWidth by PageHeight
     * - Create a Graphics object for the bitmap
     * - Call the SheetMusic.DoPrint() method to draw the music
@@ -1086,7 +1086,7 @@ public class JSheetMusicWindow extends JDialog
        /* Stop the player so that no notes are shaded */
        player.Stop(null, null);
 
-       /* We can only save sheet music in 'vertical scrolling' view */
+       /* We can only save sheet music : 'vertical scrolling' view */
        ScrollVertically(null, null);
 
        int numpages = sheetmusic.GetTotalPages();
@@ -1097,13 +1097,13 @@ public class JSheetMusicWindow extends JDialog
        dialog.DefaultExt = "png";
        dialog.Filter="PNG Image Files (*.png)|*.png";
 
-       /* The initial filename in the dialog will be <midi filename>.png */
-       string initname = midifile.FileName;
+       /* The initial filename : the dialog will be <midi filename>.png */
+       String initname = midifile.FileName;
        initname = initname.Replace(".mid", "") + ".png";
        dialog.FileName = initname;
 
        if (dialog.ShowDialog() == DialogResult.OK) {
-           string filename = dialog.FileName;
+           String filename = dialog.FileName;
            if (filename.Substring(filename.Length - 4, 4) == ".png") {
                filename = filename.Substring(0, filename.Length - 4);
            }
@@ -1120,7 +1120,7 @@ public class JSheetMusicWindow extends JDialog
                }
            }
            catch (System.IO.IOException e) {
-               string message = "";
+               String message = "";
                message += "MidiSheetMusic was unable to save to file " + 
                            filename + ".png";
                message += " because:\n" + e.Message + "\n";
@@ -1143,7 +1143,7 @@ public class JSheetMusicWindow extends JDialog
        /* Stop the player so that no notes are shaded */
        player.Stop(null, null);
 
-       /* We can only print sheet music in 'vertical scrolling' view */
+       /* We can only print sheet music : 'vertical scrolling' view */
        ScrollVertically(null, null);
 
        currentpage = 1;
@@ -1162,7 +1162,7 @@ public class JSheetMusicWindow extends JDialog
        /* Stop the player so that no notes are shaded */
        player.Stop(null, null);
 
-       /* We can only print sheet music in 'vertical scrolling' view */
+       /* We can only print sheet music : 'vertical scrolling' view */
        ScrollVertically(null, null);
 
        PrintDialog dialog = new PrintDialog();
@@ -1415,7 +1415,7 @@ public class JSheetMusicWindow extends JDialog
        if (menu.Checked)
            return;
 
-       foreach (MenuItem othermenu in changeKeyMenu.MenuItems) {
+       for (MenuItem othermenu : changeKeyMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1428,7 +1428,7 @@ public class JSheetMusicWindow extends JDialog
        if (menu.Checked)
            return;
 
-       foreach (MenuItem othermenu in transposeMenu.MenuItems) {
+       for (MenuItem othermenu : transposeMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1442,7 +1442,7 @@ public class JSheetMusicWindow extends JDialog
        if (menu.Checked)
            return;
 
-       foreach (MenuItem othermenu in shiftNotesMenu.MenuItems) {
+       for (MenuItem othermenu : shiftNotesMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1454,7 +1454,7 @@ public class JSheetMusicWindow extends JDialog
        JMenuItem menu = (MenuItem) obj;
        if (menu.Checked)
            return;
-       foreach (MenuItem othermenu in timeSigMenu.MenuItems) {
+       for (MenuItem othermenu : timeSigMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1480,7 +1480,7 @@ public class JSheetMusicWindow extends JDialog
        JMenuItem menu = (MenuItem) obj;
        if (menu.Checked)
            return;
-       foreach (MenuItem othermenu in measureMenu.MenuItems) {
+       for (MenuItem othermenu : measureMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1493,7 +1493,7 @@ public class JSheetMusicWindow extends JDialog
        if (menu.Checked)
            return;
 
-       foreach (MenuItem othermenu in combineNotesMenu.MenuItems) {
+       for (MenuItem othermenu : combineNotesMenu.MenuItems) {
            othermenu.Checked = false;
        }
        menu.Checked = true;
@@ -1522,7 +1522,7 @@ public class JSheetMusicWindow extends JDialog
       }
   }
       
-  /** The callback function for the "Play Measures in a Loop" menu */
+  /** The callback function for the "Play Measures : a Loop" menu */
   void PlayMeasuresInLoop(object obj, EventArgs args) {
       playMeasuresDialog.ShowDialog();
       playMeasuresMenu.Checked = playMeasuresDialog.IsEnabled();
